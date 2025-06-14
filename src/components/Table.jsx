@@ -1,86 +1,73 @@
-import { useState, useEffect } from "react";
-import {faker} from "@faker-js/faker";
+    import { useState, useEffect } from "react";
+    import { faker } from "@faker-js/faker";
+
+    const Table = () => {
+    
+    // hold data in table
+    const [data, setData] = useState([]);
 
 
-const Table = () => {
 
-
- // Fake data for demonstration purposes
-        const [headers, setHeaders] = useState([
-            { id: 1, KEY: "FullName", LABEL: "Full Name" },
-            { id: 2, KEY: "Email", LABEL: "Email" },
-            { id: 3, KEY: "City", LABEL: "City" },
-            { id: 4, KEY: "registeredDate", LABEL: "Registered Date" },
-            { id: 5, KEY: "daysSinceRegistered", LABEL: "Days Since Registered" },
-        ]);
-
-        const data = [
-            {
-            id: 1,
-            FirstName: "John",
-            LastName: "Doe",
-            Email: "john.doe@example.com",
-            City: "New York",
-            registeredDate: "2023-01-01",
-            },
-            {
-            id: 2,
-            FirstName: "Mark",
-            LastName: "Smith",
-            Email: "mark.smith@example.com",
-            City: "Los Angeles",
-            registeredDate: "2023-01-02",
-            },
-            {
-            id: 3,
-            FirstName: "Denis",
-            LastName: "Ortiz",
-            Email: "denis.ortiz@example.com",
-            City: "Chicago",
-            registeredDate: "2023-01-01",
-            },
-            {
-            id: 4,
-            FirstName: "Jane",
-            LastName: "Smith",
-            Email: "jane.smith@example.com",
-            City: "Houston",
-            registeredDate: "2023-01-02",
-            },
-        ].map((item) => {
-            const daysSinceRegistered = Math.floor(
-            (new Date() - new Date(item.registeredDate)) / (1000 * 60 * 60 * 24)
-            );
+    // Faker library integration
+    const fetchFakeUsers = async () => {
+        return new Promise((resolve) => {
+        setTimeout(() => {
+            const users = Array.from({ length: 500 }, (_, id) => {
+            // First and last generated from faker library
+            const firstName = faker.person.firstName();
+            const lastName = faker.person.lastName();
             return {
-            ...item,
-            FullName: `${item.FirstName} ${item.LastName}`,
-            daysSinceRegistered,
+                id,
+                FirstName: firstName,
+                LastName: lastName,
+                // Full name combined
+                FullName: `${firstName} ${lastName}`, 
+                // Generate email, city and date within range
+                Email: faker.internet.email({ firstName, lastName }),
+                City: faker.location.city(),
+                registeredDate: faker.date
+                .between({ from: "2025-01-01", to: "2025-06-14" })
+                .toISOString()
+                .split("T")[0],
             };
+            });
+            resolve(users);
+        },);
         });
+    };
 
-        return (
-            <table>
-            <thead>
-                <tr>
-                {headers.map((header) => (
-                    <th key={header.id}>{header.LABEL}</th>
-                ))}
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((row) => (
-                <tr key={row.id}>
-                    {headers.map((header) => (
-                    <td key={header.id}>{row[header.KEY]}</td>
-                    ))}
-                </tr>
-                ))}
-            </tbody>
-            </table>
-        );
-        };
-
-        export default Table;
+    useEffect(() => {
+        fetchFakeUsers().then((users) => {
+            // link state with users fetched
+        setData(users); 
+        });
+    }, []);
 
 
-        
+
+    // display table 
+    return (
+        <table>
+        <thead>
+            <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>City</th>
+            <th>Registered Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {data.map((user) => (
+            <tr key={user.id}>
+                <td>{user.FullName}</td>
+                <td>{user.Email}</td>
+                <td>{user.City}</td>
+                <td>{user.registeredDate}</td>
+            </tr>
+            ))}
+        </tbody>
+        </table>
+    );
+    };
+
+    export default Table;
