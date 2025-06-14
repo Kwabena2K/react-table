@@ -43,29 +43,39 @@
         });
     }, []);
 
+    // DSR column function to calculate date into String and return the value in days
+    function daysSinceRegistered(dateString) {
+        const today = new Date ();
+        const date = new Date(dateString);
+        
+        return Math.floor((today - date) / (1000 * 60 * 60 * 24));
+    }
+
 
 
     // display table 
     return (
         <table>
-        <thead>
-            <tr>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>City</th>
-            <th>Registered Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {data.map((user) => (
-            <tr key={user.id}>
-                <td>{user.FullName}</td>
-                <td>{user.Email}</td>
-                <td>{user.City}</td>
-                <td>{user.registeredDate}</td>
-            </tr>
-            ))}
-        </tbody>
+            <thead>
+                <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>City</th>
+                <th>Registered Date</th>
+                <th>Days Since Registered</th>
+                </tr>
+            </thead>
+            <tbody>
+                {data.map((user) => (
+                <tr key={user.id}>
+                    <td>{user.FullName}</td>
+                    <td>{user.Email}</td>
+                    <td>{user.City}</td>
+                    <td>{user.registeredDate}</td>
+                    <td>{daysSinceRegistered(user.registeredDate)}</td>
+                </tr>
+                ))}
+            </tbody>
         </table>
     );
     };
