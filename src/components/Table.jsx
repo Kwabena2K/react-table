@@ -5,9 +5,7 @@ import {faker} from "@faker-js/faker";
 const Table = () => {
 
 
-    // Fake data for demonstration purposes
-
-    // Updated headers to match the new data structure
+ // Fake data for demonstration purposes
         const [headers, setHeaders] = useState([
             { id: 1, KEY: "FullName", LABEL: "Full Name" },
             { id: 2, KEY: "Email", LABEL: "Email" },
@@ -49,30 +47,40 @@ const Table = () => {
             City: "Houston",
             registeredDate: "2023-01-02",
             },
-        ].map((item) => ({
+        ].map((item) => {
+            const daysSinceRegistered = Math.floor(
+            (new Date() - new Date(item.registeredDate)) / (1000 * 60 * 60 * 24)
+            );
+            return {
             ...item,
             FullName: `${item.FirstName} ${item.LastName}`,
-        }));
+            daysSinceRegistered,
+            };
+        });
 
-        return  (
-        <table>
-        <thead>
-            <tr>{headers.map((header, index) =>
-                    <th key={index}><span>{header.LABEL}</span></th> )}</tr>
-        </thead>
-        <tbody>
-            {data.map((row, index) => (
-                <tr key={index}>
-                    <td>{row.FirstName}</td>
-                    <td>{row.LastName}</td>
-                    <td>{row.Email}</td>
-                    <td>{row.City}</td>
-                    <td>{row.registeredDate}</td>
+        return (
+            <table>
+            <thead>
+                <tr>
+                {headers.map((header) => (
+                    <th key={header.id}>{header.LABEL}</th>
+                ))}
                 </tr>
-            ))}
-        </tbody>
-        </table>
-    );
-}
+            </thead>
+            <tbody>
+                {data.map((row) => (
+                <tr key={row.id}>
+                    {headers.map((header) => (
+                    <td key={header.id}>{row[header.KEY]}</td>
+                    ))}
+                </tr>
+                ))}
+            </tbody>
+            </table>
+        );
+        };
 
-export default Table;
+        export default Table;
+
+
+        
