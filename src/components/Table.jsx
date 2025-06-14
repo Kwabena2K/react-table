@@ -12,7 +12,7 @@
     const fetchFakeUsers = async () => {
         return new Promise((resolve) => {
         setTimeout(() => {
-            const users = Array.from({ length: 500 }, (_, id) => {
+            const users = Array.from({ length: 550 }, (_, id) => {
             // First and last generated from faker library
             const firstName = faker.person.firstName();
             const lastName = faker.person.lastName();
@@ -43,6 +43,13 @@
         });
     }, []);
 
+    // Pagination logic
+    const [currentPage, setCurrentPage] = useState(1);
+    const rowPage = 20;
+    
+    const pagination = data.slice((currentPage -1) * rowPage, currentPage * rowPage);
+
+
     // DSR column function to calculate date into String and return the value in days
     function daysSinceRegistered(dateString) {
         const today = new Date ();
@@ -55,6 +62,7 @@
 
     // display table 
     return (
+        <>
         <table>
             <thead>
                 <tr>
@@ -66,7 +74,7 @@
                 </tr>
             </thead>
             <tbody>
-                {data.map((user) => (
+                {pagination.map((user) => (
                 <tr key={user.id}>
                     <td>{user.FullName}</td>
                     <td>{user.Email}</td>
@@ -77,7 +85,33 @@
                 ))}
             </tbody>
         </table>
-    );
+
+
+                {/* Pagination scroll logic */}
+            <div style={{ marginTop: "2rem" }}>
+                <button
+                    // go to the prev page
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    // turn off button on page 1
+                    disabled={currentPage === 1}
+                >
+                    Prev
+                </button>
+
+
+                <span style={{ margin: "0 1rem" }}>Page {currentPage}</span>
+
+                {/* opposite logic of prev page */}
+                <button
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    // disable button on last page
+                    disabled={currentPage >= Math.ceil(data.length / rowPage)}
+                >
+                    Next
+                </button>
+            </div>
+        </>
+        );
     };
 
     export default Table;

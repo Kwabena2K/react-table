@@ -10,6 +10,13 @@
 
 th {
 background-color: #ddd;
+padding: 1.4rem;
+text-transform: capitalize;
+font-size: 1.16rem;
+}
+
+td {
+  font-size: 0.95rem;
 }
 
 table {
