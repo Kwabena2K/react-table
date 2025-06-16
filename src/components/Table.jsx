@@ -3,12 +3,12 @@
     import Caret from "./Caret";
 
     const Table = () => {
+
     // hold data in table
     const [data, setData] = useState([]);
 
-    // sort logic
-    const [sortKey, setSortKey] = useState("FullName");
-    const [sortOrder, setSortOrder] = useState("asc");
+
+
 
     // Faker library integration
     const fetchFakeUsers = async () => {
@@ -45,8 +45,13 @@
         setData(users);
         });
     }, []);
+    // Faker library integration END
+
 
     // sort logic START
+    const [sortKey, setSortKey] = useState("FullName");
+    const [sortOrder, setSortOrder] = useState("asc");
+
     const sortTable = (key) => {
         if (sortKey === key) {
         setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -58,14 +63,30 @@
 
     const dataSorted = [...data].sort((a, b) => {
         if (!sortKey) return 0;
-        const aVal = a[sortKey];
-        const bVal = b[sortKey];
+        let aVal = a[sortKey];
+        let bVal = b[sortKey];
+
+        if (sortKey === "DaysSinceRegistered") {
+            aVal = daysSinceRegistered(a.registeredDate);
+            bVal = daysSinceRegistered(b.registeredDate);
+        } 
+        
+        
+        if (typeof aVal === "number" && typeof bVal === "number") {
+            return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
+        }
+
+            
         return sortOrder === "asc"
-        ? String(aVal).localeCompare(String(bVal))
-        : String(bVal).localeCompare(String(aVal));
+            ? aVal.localeCompare(bVal)
+            : bVal.localeCompare(aVal);
     });
 
     // sort logic END
+
+
+
+
 
     // Pagination logic START
     const [currentPage, setCurrentPage] = useState(1);
@@ -78,19 +99,24 @@
 
     // Pagination logic END
 
-    // DSR column function to calculate date into String and return the value in days
+
+
+
+    // DSR function to calculate date into String and return the value in days
     function daysSinceRegistered(dateString) {
         const today = new Date();
         const date = new Date(dateString);
 
         return Math.floor((today - date) / (1000 * 60 * 60 * 24));
     }
+    // DSR function END
+
+
+
 
 
 
     // Column drag logic START
-
-    // Click and drag to reorder columns
     const [columns, setColumns] = useState([
         "FullName",
         "Email",
@@ -130,11 +156,11 @@
 
         dragItem.current = null;
     };
-
-
-
-
     // column Drag logic END
+
+
+
+
 
 
     // display table
