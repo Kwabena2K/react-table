@@ -40,15 +40,25 @@ table, th, td {
   border: 1px solid;
 }
 
+th.dragging {
+  opacity: 0.5;
+  background-color: #8e919a;
+  border: black 3px solid;
+}
+
 
 /* Caret direction indicator */
 
 .caret.asc {
-  transform: rotate(180deg); /* Point up */
+  transform: rotate(180deg); 
+  color: blue;
+  height: 16px;
 }
 
 .caret.desc {
-  transform: rotate(0deg); /* Point down */
+  transform: rotate(0deg); 
+  color: red;
+  height: 16px;
 }
 
 /* Caret direction indicator END */
