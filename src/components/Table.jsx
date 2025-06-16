@@ -1,10 +1,15 @@
     import { useState, useEffect } from "react";
     import { faker } from "@faker-js/faker";
+    import Caret from "./Caret";
 
     const Table = () => {
     
     // hold data in table
     const [data, setData] = useState([]);
+
+    // sort logic
+    const [sortKey, setSortKey] = useState("FullName");
+    const [sortOrder, setSortOrder] = useState("asc");
 
 
 
@@ -12,6 +17,7 @@
     const fetchFakeUsers = async () => {
         return new Promise((resolve) => {
         setTimeout(() => {
+            // fill array with 550 rows
             const users = Array.from({ length: 550 }, (_, id) => {
             // First and last generated from faker library
             const firstName = faker.person.firstName();
@@ -43,11 +49,37 @@
         });
     }, []);
 
-    // Pagination logic
+    
+    
+
+    // sort logic START
+    const sortTable = (key) => {
+        if (sortKey === key){
+            setSortOrder((sortOrder === "asc" ? "desc"  : "asc"));
+        } else {
+            setSortKey(key);
+            setSortOrder("asc");
+        }
+    };
+
+    const dataSorted = [...data].sort((a, b) => {
+        if (!sortKey) return 0;
+        const aVal = a[sortKey];
+        const bVal = b[sortKey];
+        return sortOrder === "asc"
+            ? String(aVal).localeCompare(String(bVal))
+            : String(bVal).localeCompare(String(aVal));
+        });
+
+    // sort logic END
+
+    // Pagination logic START
     const [currentPage, setCurrentPage] = useState(1);
     const rowPage = 20;
     
-    const pagination = data.slice((currentPage -1) * rowPage, currentPage * rowPage);
+    const pagination = dataSorted.slice((currentPage -1) * rowPage, currentPage * rowPage);
+
+    // Pagination logic END
 
 
     // DSR column function to calculate date into String and return the value in days
@@ -66,10 +98,10 @@
         <table>
             <thead>
                 <tr>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>City</th>
-                <th>Registered Date</th>
+                <th onClick={() => sortTable("FullName")}>Full Name {sortKey === "FullName" && <Caret direction={sortOrder} />}</th>
+                <th onClick={() => sortTable("Email")}>Email</th>
+                <th onClick={() => sortTable("City")}>City</th>
+                <th onClick={() => sortTable("registeredDate")}>Registered Date</th>
                 <th>Days Since Registered</th>
                 </tr>
             </thead>
@@ -87,29 +119,29 @@
         </table>
 
 
-                {/* Pagination scroll logic */}
-            <div style={{ marginTop: "2rem" }}>
-                <button
-                    // go to the prev page
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    // turn off button on page 1
-                    disabled={currentPage === 1}
+            {/* Pagination scroll logic */}
+        <div style={{ marginTop: "2rem" }}>
+            <button
+                // go to the prev page
+                onClick={() => setCurrentPage(currentPage - 1)}
+                // turn off button on page 1
+                disabled={currentPage === 1}
                 >
                     Prev
-                </button>
+            </button>
 
 
-                <span style={{ margin: "0 1rem" }}>Page {currentPage}</span>
+            <span style={{ margin: "0 1rem" }}>Page {currentPage}</span>
 
-                {/* opposite logic of prev page */}
-                <button
-                    onClick={() => setCurrentPage(currentPage + 1)}
+            {/* opposite logic of prev page */}
+            <button
+                onClick={() => setCurrentPage(currentPage + 1)}
                     // disable button on last page
-                    disabled={currentPage >= Math.ceil(data.length / rowPage)}
+                disabled={currentPage >= Math.ceil(data.length / rowPage)}
                 >
-                    Next
-                </button>
-            </div>
+                Next
+            </button>
+        </div>
         </>
         );
     };

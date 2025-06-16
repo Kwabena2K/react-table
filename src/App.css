@@ -39,3 +39,16 @@ thead {
 table, th, td {
   border: 1px solid;
 }
+
+
+/* Caret direction indicator */
+
+.caret.asc {
+  transform: rotate(180deg); /* Point up */
+}
+
+.caret.desc {
+  transform: rotate(0deg); /* Point down */
+}
+
+/* Caret direction indicator END */
