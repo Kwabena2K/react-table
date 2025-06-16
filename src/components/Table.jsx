@@ -99,9 +99,9 @@
             <thead>
                 <tr>
                 <th onClick={() => sortTable("FullName")}>Full Name {sortKey === "FullName" && <Caret direction={sortOrder} />}</th>
-                <th onClick={() => sortTable("Email")}>Email</th>
-                <th onClick={() => sortTable("City")}>City</th>
-                <th onClick={() => sortTable("registeredDate")}>Registered Date</th>
+                <th onClick={() => sortTable("Email")}>Email {sortKey === "Email" && <Caret direction={sortOrder}/>}</th>
+                <th onClick={() => sortTable("City")}>City {sortKey === "City" && <Caret direction={sortOrder}/>}</th>
+                <th onClick={() => sortTable("registeredDate")}>Registered Date {sortKey === "registeredDate" && <Caret direction={sortOrder}/>}</th>
                 <th>Days Since Registered</th>
                 </tr>
             </thead>
